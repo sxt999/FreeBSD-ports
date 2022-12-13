@@ -1,8 +1,7 @@
 PORTNAME=	strongswan
-DISTVERSION=	5.9.4
+DISTVERSION=	gmalg-merge
 CATEGORIES=	security net-vpn
-MASTER_SITES=	https://download.strongswan.org/ \
-		https://download2.strongswan.org/
+MASTER_SITES=	https://images-sftel.cn-bj.ufileos.com/
 
 MAINTAINER=	strongswan@nanoteq.com
 COMMENT=	Open Source IKEv2 IPsec-based VPN solution
@@ -32,6 +31,9 @@ CONFIGURE_ARGS=	--disable-gmp \
 		--enable-md4 \
 		--enable-openssl \
 		--enable-whitelist \
+		--enable-kernel-libipsec \
+		--enable-gmalg \
+		--with-gmalg_interior=yes \
 		--with-group=wheel \
 		--with-lib-prefix=${PREFIX}
 
