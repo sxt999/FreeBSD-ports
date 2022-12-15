@@ -1,10 +1,13 @@
 PORTNAME=	strongswan
-DISTVERSION=	gmalg-merge
+DISTVERSION=	5.9.8
+PORTREVISION=	1
 CATEGORIES=	security net-vpn
-MASTER_SITES=	https://images-sftel.cn-bj.ufileos.com/
+MASTER_SITES=	https://download.strongswan.org/ \
+		https://download2.strongswan.org/
 
 MAINTAINER=	strongswan@nanoteq.com
 COMMENT=	Open Source IKEv2 IPsec-based VPN solution
+WWW=		https://www.strongswan.org
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -31,28 +34,26 @@ CONFIGURE_ARGS=	--disable-gmp \
 		--enable-md4 \
 		--enable-openssl \
 		--enable-whitelist \
-		--enable-kernel-libipsec \
-		--enable-gmalg \
-		--with-gmalg_interior=yes \
 		--with-group=wheel \
 		--with-lib-prefix=${PREFIX}
 
 INSTALL_TARGET=	install-strip
 TEST_TARGET=	check
 
-OPTIONS_DEFINE=			CURL EAPAKA3GPP2 EAPDYNAMIC EAPRADIUS \
-				EAPSIMFILE FARP GCM IKEV1 IPSECKEY \
+OPTIONS_DEFINE=			CTR CURL EAPAKA3GPP2 EAPDYNAMIC EAPRADIUS \
+				EAPSIMFILE FARP GCM IKEV1 IPSECKEY KDF \
 				KERNELLIBIPSEC LDAP LOADTESTER MEDIATION MYSQL \
 				PKCS11 PKI PYTHON SCEP SMP SQLITE SWANCTL \
 				TESTVECTOR TPM TSS2 UNBOUND UNITY VICI XAUTH
 OPTIONS_DEFINE_i386=	VIA
-OPTIONS_DEFAULT=		BUILTIN CURL IKEV1 PKI SWANCTL VICI
+OPTIONS_DEFAULT=		BUILTIN CURL GCM IKEV1 KDF PKI SWANCTL VICI
 OPTIONS_SINGLE=			PRINTF_HOOKS
 OPTIONS_SINGLE_PRINTF_HOOKS=	BUILTIN LIBC VSTR
 OPTIONS_SUB=			yes
 
 # Description of options
 BUILTIN_DESC=		Use builtin printf hooks
+CTR_DESC=		Enable CTR cipher mode wrapper plugin
 CURL_DESC=		Enable CURL to fetch CRL/OCSP
 EAPAKA3GPP2_DESC=	Enable EAP AKA with 3gpp2 backend
 EAPDYNAMIC_DESC=	Enable EAP dynamic proxy module
@@ -62,6 +63,7 @@ FARP_DESC=		Enable farp plugin
 GCM_DESC=		Enable GCM AEAD wrapper crypto plugin
 IKEV1_DESC=		Enable IKEv1 support
 IPSECKEY_DESC=		Enable authentication with IPSECKEY resource records with DNSSEC
+KDF_DESC=		Enable KDF (prf+) implementation plugin
 KERNELLIBIPSEC_DESC=	Enable IPSec userland backend
 LIBC_DESC=		Use libc printf hooks
 LOADTESTER_DESC=	Enable load testing plugin
@@ -84,6 +86,7 @@ XAUTH_DESC=		Enable XAuth password verification
 
 # Extra options
 BUILTIN_CONFIGURE_ON=		--with-printf-hooks=builtin
+CTR_CONFIGURE_ON=		--enable-ctr
 CURL_LIB_DEPENDS=		libcurl.so:ftp/curl
 CURL_CONFIGURE_ON=		--enable-curl
 EAPAKA3GPP2_LIB_DEPENDS=	libgmp.so:math/gmp
@@ -97,6 +100,7 @@ FARP_CONFIGURE_ON=		--enable-farp
 GCM_CONFIGURE_ON=		--enable-gcm
 IKEV1_CONFIGURE_OFF=		--disable-ikev1
 IPSECKEY_CONFIGURE_ON=		--enable-ipseckey
+KDF_CONFIGURE_ON=		--enable-kdf
 KERNELLIBIPSEC_CONFIGURE_ON=	--enable-kernel-libipsec
 LDAP_USE=			OPENLDAP=yes
 LDAP_CONFIGURE_ON=		--enable-ldap
