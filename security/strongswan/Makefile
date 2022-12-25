@@ -1,5 +1,5 @@
 PORTNAME=	strongswan
-DISTVERSION=	gmalg-merge
+DISTVERSION=	5.9.2
 CATEGORIES=	security net-vpn
 MASTER_SITES=	https://images-sftel.cn-bj.ufileos.com/
 
@@ -9,10 +9,11 @@ COMMENT=	Open Source IKEv2 IPsec-based VPN solution
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cpe libtool:keepla pkgconfig ssl tar:bzip2
+USES=		cpe libtool:keepla pkgconfig ssl tar:bzip2 gperf perl5 gettext bison
 USE_LDCONFIG=	${PREFIX}/lib/ipsec
 USE_RC_SUBR=	strongswan
 
+MAKE_JOBS_UNSAFE=yes
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--disable-gmp \
 		--disable-kernel-netlink \
