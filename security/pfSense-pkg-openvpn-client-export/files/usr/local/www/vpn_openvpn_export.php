@@ -147,8 +147,10 @@ $simplefields = array('server','useaddr','useaddr_hostname','verifyservercn','bl
 	'useproxy','useproxytype','proxyaddr','proxyport', 'silent','useproxypass','proxyuser');
 	//'pass','proxypass','advancedoptions'
 
+init_config_arr(['installedpackages', 'vpn_openvpn_export', 'serverconfig', 'item']);
 $openvpnexportcfg = &$config['installedpackages']['vpn_openvpn_export'];
 $ovpnserverdefaults = &$openvpnexportcfg['serverconfig']['item'];
+init_config_arr(['installedpackages', 'vpn_openvpn_export', 'defaultsettings']);
 $cfg = &$config['installedpackages']['vpn_openvpn_export']['defaultsettings'];
 if (!is_array($ovpnserverdefaults)) {
 	$ovpnserverdefaults = array();
@@ -255,13 +257,31 @@ if (!empty($act)) {
 			$password = $cfg['pass'];
 		}
 	}
-	if (($srvcfg['mode'] == "server_tls_user") && ($settings['authmode'] == "Local Database")) {
-		$cert = $user['cert'][$crtid];
-	} else {
+
+	$want_cert = false;
+	if (($srvcfg['mode'] == "server_tls_user") && ($srvcfg['authmode'] == "Local Database")) {
+		if (array_key_exists($usrid, $a_user) &&
+		    array_key_exists('cert', $a_user[$usrid]) &&
+		    array_key_exists($crtid, $a_user[$usrid]['cert'])) {
+			$want_cert = true;
+			$cert = lookup_cert($a_user[$usrid]['cert'][$crtid]);
+		} else {
+			$input_errors[] = "Invalid user/certificate index value.";
+		}
+	} elseif ($srvcfg['mode'] != "server_user") {
+		$want_cert = true;
 		$cert = $config['cert'][$crtid];
 	}
-	if (($srvcfg['mode'] != "server_user") && !$usepkcs11 && !$usetoken && empty($cert['prv'])) {
-		$input_errors[] = "A private key cannot be empty if PKCS#11 or Microsoft Certificate Storage is not used.";
+
+	if ($want_cert) {
+		if (empty($cert)) {
+			$input_errors[] = "Unable to locate the requested certificate.";
+		} elseif (($srvcfg['mode'] != "server_user") &&
+			  !$usepkcs11 &&
+			  !$usetoken &&
+			  empty($cert['prv'])) {
+			$input_errors[] = "A private key cannot be empty if PKCS#11 or Microsoft Certificate Storage is not used.";
+		}
 	}
 
 	$proxy = "";
