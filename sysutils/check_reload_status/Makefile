@@ -16,7 +16,7 @@ WHERE=		sbin
 PLIST_FILES=	${WHERE}/${PORTNAME} ${WHERE}/pfSctl ${WHERE}/fcgicli
 CFLAGS+=	-I/usr/local/include -L/usr/local/lib 
 
-CFLAGS+=	-Wsystem-headers -Werror -Wall -Wno-format-y2k -W \
+CFLAGS+=	-Wsystem-headers -Wno-error -Wall -Wno-format-y2k -W \
                 -Wno-unused-parameter -Wstrict-prototypes \
                 -Wmissing-prototypes -Wpointer-arith -Wreturn-type \
                 -Wcast-qual -Wwrite-strings -Wswitch -Wshadow \

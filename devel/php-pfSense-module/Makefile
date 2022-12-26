@@ -23,7 +23,7 @@ USES=		php:ext
 IGNORE_WITH_PHP=56 70 71
 
 CFLAGS+=	-I/usr/local/include -I. -DTCPSTATES
-CFLAGS+=	-Wall -Wredundant-decls -Wnested-externs -Winline
+CFLAGS+=	-Wall -Wredundant-decls -Wnested-externs -Winline -Wno-error
 IPFW_CFLAGS=	-DIPFW_FUNCTIONS
 ETHERSWITCH_CFLAGS=	-DETHERSWITCH_FUNCTIONS
 
